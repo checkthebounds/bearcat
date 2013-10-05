@@ -52,14 +52,15 @@
 
 int main(int argc, char *argv[]) {
 	if(argc < 2) {
-		printf("usage: ./bearcat file\n");
+		printf("usage: ./bearcat files\n");
 		exit(1);
 	}
+	char d;
 	int fd;
 	int i = 0;
-	char d;
 	int nread = 0;
-	if((fd = open(argv[1], O_RDONLY)) == -1) {
+	int fread = 1;
+	if((fd = open(argv[fread++], O_RDONLY)) == -1) {
 		printf("Could not open file\n");
 		exit(1);
 	}
@@ -74,7 +75,17 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			if(nread == 0) {
-				printf("8");
+				if(fread == argc) {
+					printf("8");
+				}
+				else {
+					close(fd);
+					if((fd = open(argv[fread++], O_RDONLY)) == -1) {
+						printf("\nCould not open file\n");
+						exit(1);
+					}
+					i--;
+				}
 			}
 		}
 		else {
@@ -84,5 +95,6 @@ int main(int argc, char *argv[]) {
 			i = 0;
 		}
 	}
+	close(fd);
 	exit(0);
 }
